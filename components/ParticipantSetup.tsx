@@ -45,8 +45,8 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">👥 Participants</h2>
+    <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-green-700">
+      <h2 className="text-2xl font-bold mb-4 text-red-700">👥 Participants</h2>
       
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="space-y-4">
@@ -55,7 +55,7 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter participant name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border-2 border-green-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
           />
           
           {/* Icon Type Selector */}
@@ -87,7 +87,7 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
             <select
               value={selectedIcon}
               onChange={(e) => setSelectedIcon(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-2xl"
+              className="w-sm px-4 py-2 border-2 border-green-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-2xl bg-white"
             >
               {AVAILABLE_ICONS.map(icon => (
                 <option key={icon} value={icon}>{icon}</option>
@@ -108,8 +108,8 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
                   }}
                   className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                     photoSource === 'upload'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-green-700 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border-2 border-green-600'
                   }`}
                 >
                   📁 Upload File
@@ -122,8 +122,8 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
                   }}
                   className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                     photoSource === 'url'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-green-700 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border-2 border-green-600'
                   }`}
                 >
                   🔗 Photo URL
@@ -136,7 +136,7 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
                   type="file"
                   accept="image/*"
                   onChange={handlePhotoUpload}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border-2 border-green-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
                 />
               )}
 
@@ -147,7 +147,7 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
                   value={photoUrl}
                   onChange={(e) => setPhotoUrl(e.target.value)}
                   placeholder="https://example.com/photo.jpg"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border-2 border-green-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
                 />
               )}
 
@@ -174,7 +174,7 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
             disabled={!name.trim() || (iconType === 'photo' && !photoUrl)}
             className={`w-full px-6 py-2 rounded-lg transition-colors font-semibold ${
               name.trim() && (iconType === 'emoji' || photoUrl)
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                ? 'bg-green-700 text-white hover:bg-green-800'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -190,7 +190,7 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
           participants.map(participant => (
             <div
               key={participant.id}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border-2 border-green-200"
             >
               <div className="flex items-center gap-3">
                 {participant.iconType === 'photo' && participant.photoUrl ? (

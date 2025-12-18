@@ -124,7 +124,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
   return (
     <div className="space-y-6">
       {/* Current Turn Info */}
-      <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg shadow-xl p-6 text-center">
+      <div className="bg-gradient-to-r from-green-700 via-red-700 to-amber-800 rounded-lg shadow-xl p-6 text-center border-4 border-white">
         <div className="flex items-center justify-center gap-3 mb-2">
           <h2 className="text-3xl font-bold text-white">Current Turn:</h2>
           {currentPlayer && <ParticipantIcon participant={currentPlayer} size="lg" />}
@@ -137,16 +137,16 @@ export default function GamePlay({ gameState, setGameState }: Props) {
 
       {/* Last Action */}
       {gameState.lastAction && (
-        <div className="bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
-          <p className="text-blue-800 font-semibold">{gameState.lastAction}</p>
+        <div className="bg-white border-l-4 border-green-700 p-4 rounded border-2 border-green-600">
+          <p className="text-green-900 font-semibold">{gameState.lastAction}</p>
         </div>
       )}
 
       {/* Action Buttons */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Pick from Pile */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-green-700">
+          <h3 className="text-xl font-bold mb-4 text-green-800 flex items-center gap-2">
             🎁 Pick from Pile
           </h3>
           
@@ -160,7 +160,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                 <button
                   key={present.id}
                   onClick={() => handlePickFromPile(present.id)}
-                  className="w-full text-left p-4 bg-green-50 border-2 border-green-300 rounded-lg hover:bg-green-100 hover:border-green-500 transition-all"
+                  className="w-full text-left p-4 bg-amber-50 border-2 border-amber-600 rounded-lg hover:bg-amber-100 hover:border-amber-800 transition-all"
                 >
                   <span className="font-semibold text-gray-800">{present.name}</span>
                 </button>
@@ -170,8 +170,8 @@ export default function GamePlay({ gameState, setGameState }: Props) {
         </div>
 
         {/* Steal from Others */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-red-700">
+          <h3 className="text-xl font-bold mb-4 text-red-800 flex items-center gap-2">
             🎯 Steal from Others
           </h3>
           
@@ -213,8 +213,8 @@ export default function GamePlay({ gameState, setGameState }: Props) {
       </div>
 
       {/* Current Status */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold mb-4 text-gray-800">📊 Current Status</h3>
+      <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-amber-800">
+        <h3 className="text-xl font-bold mb-4 text-amber-900">📊 Current Status</h3>
         
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {gameState.participants.map(participant => {
@@ -224,8 +224,8 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                 key={participant.id}
                 className={`p-4 rounded-lg border-2 ${
                   participant.id === currentPlayerId
-                    ? 'border-yellow-400 bg-yellow-50'
-                    : 'border-gray-200 bg-gray-50'
+                    ? 'border-red-600 bg-red-50 border-4'
+                    : 'border-green-600 bg-white'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -251,12 +251,12 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                                   setEditingName('');
                                 }
                               }}
-                              className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="flex-1 px-2 py-1 text-xs border border-green-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
                               autoFocus
                             />
                             <button
                               onClick={() => handleRenamePresent(present.id, editingName)}
-                              className="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600"
+                              className="px-2 py-1 bg-green-700 text-white rounded text-xs hover:bg-green-800"
                             >
                               ✓
                             </button>
@@ -275,7 +275,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                             <span className="flex-1">{present.name}</span>
                             <button
                               onClick={() => startEditing(present.id, present.name)}
-                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                              className="px-2 py-1 bg-amber-700 text-white rounded text-xs hover:bg-amber-800"
                               title="Rename present"
                             >
                               ✎
@@ -295,8 +295,8 @@ export default function GamePlay({ gameState, setGameState }: Props) {
       </div>
 
       {/* Turn Order */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold mb-4 text-gray-800">📋 Turn Order</h3>
+      <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-green-700">
+        <h3 className="text-xl font-bold mb-4 text-green-800">📋 Turn Order</h3>
         <div className="flex flex-wrap gap-2">
           {gameState.turnOrder.map((participantId, index) => {
             const participant = gameState.participants.find(p => p.id === participantId);
@@ -306,12 +306,12 @@ export default function GamePlay({ gameState, setGameState }: Props) {
             return (
               <div
                 key={`${participantId}-${index}`}
-                className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 ${
+                className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 border-2 ${
                   isCurrent
-                    ? 'bg-yellow-400 text-white'
+                    ? 'bg-red-600 text-white border-green-600'
                     : isPast
-                    ? 'bg-gray-300 text-gray-600 line-through'
-                    : 'bg-blue-100 text-blue-800'
+                    ? 'bg-gray-300 text-gray-600 line-through border-gray-400'
+                    : 'bg-green-100 text-green-800 border-green-600'
                 }`}
               >
                 {participant && <ParticipantIcon participant={participant} size="sm" />}

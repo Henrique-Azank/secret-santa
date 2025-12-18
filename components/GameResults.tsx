@@ -17,7 +17,7 @@ export default function GameResults({ gameState, onReset }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-xl p-8 text-center">
+      <div className="bg-gradient-to-r from-green-700 via-red-700 to-amber-800 rounded-lg shadow-xl p-8 text-center border-4 border-white">
         <h2 className="text-4xl font-bold text-white mb-2">
           🎉 Game Complete! 🎉
         </h2>
@@ -27,14 +27,14 @@ export default function GameResults({ gameState, onReset }: Props) {
       </div>
 
       {/* Results */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-2xl font-bold mb-6 text-gray-800">Final Distribution</h3>
+      <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-green-700">
+        <h3 className="text-2xl font-bold mb-6 text-green-800">Final Distribution</h3>
         
         <div className="space-y-4">
           {participantsWithPresents.map(({ participant, presents }) => (
             <div
               key={participant.id}
-              className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-2 border-purple-200"
+              className="p-6 bg-gradient-to-r from-green-50 to-red-50 rounded-lg border-4 border-amber-700"
             >
               <div className="flex items-center gap-3 mb-3">
                 <ParticipantIcon participant={participant} size="xl" />
@@ -64,28 +64,28 @@ export default function GameResults({ gameState, onReset }: Props) {
       </div>
 
       {/* Statistics */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-2xl font-bold mb-4 text-gray-800">📊 Game Statistics</h3>
+      <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-red-700">
+        <h3 className="text-2xl font-bold mb-4 text-red-800">📊 Game Statistics</h3>
         
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 bg-blue-50 rounded-lg">
+          <div className="p-4 bg-green-50 rounded-lg border-2 border-green-600">
             <p className="text-sm text-gray-600">Total Players</p>
-            <p className="text-3xl font-bold text-blue-600">{gameState.participants.length}</p>
+            <p className="text-3xl font-bold text-green-700">{gameState.participants.length}</p>
           </div>
           
-          <div className="p-4 bg-green-50 rounded-lg">
+          <div className="p-4 bg-red-50 rounded-lg border-2 border-red-600">
             <p className="text-sm text-gray-600">Total Presents</p>
-            <p className="text-3xl font-bold text-green-600">{gameState.presents.length}</p>
+            <p className="text-3xl font-bold text-red-700">{gameState.presents.length}</p>
           </div>
           
-          <div className="p-4 bg-orange-50 rounded-lg">
+          <div className="p-4 bg-amber-50 rounded-lg border-2 border-amber-700">
             <p className="text-sm text-gray-600">Total Turns</p>
-            <p className="text-3xl font-bold text-orange-600">{gameState.turnOrder.length}</p>
+            <p className="text-3xl font-bold text-amber-800">{gameState.turnOrder.length}</p>
           </div>
           
-          <div className="p-4 bg-purple-50 rounded-lg">
+          <div className="p-4 bg-green-50 rounded-lg border-2 border-green-600">
             <p className="text-sm text-gray-600">Total Steals</p>
-            <p className="text-3xl font-bold text-purple-600">
+            <p className="text-3xl font-bold text-green-700">
               {gameState.presents.reduce((sum, p) => sum + p.stolenCount, 0)}
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function GameResults({ gameState, onReset }: Props) {
         
         if (mostStolen && mostStolen.stolenCount > 0) {
           return (
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border-2 border-red-300 p-6">
+            <div className="bg-gradient-to-r from-red-50 to-amber-50 rounded-lg border-4 border-red-600 p-6">
               <h3 className="text-xl font-bold mb-2 text-gray-800">🔥 Most Popular Present</h3>
               <p className="text-lg">
                 <span className="font-bold">"{mostStolen.name}"</span> was stolen{' '}
@@ -116,7 +116,7 @@ export default function GameResults({ gameState, onReset }: Props) {
       <div className="text-center">
         <button
           onClick={onReset}
-          className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xl font-bold shadow-lg hover:shadow-xl"
+          className="px-8 py-4 bg-amber-800 text-white rounded-lg hover:bg-amber-900 transition-colors text-xl font-bold shadow-lg hover:shadow-xl border-4 border-green-700"
         >
           🔄 Start New Game
         </button>

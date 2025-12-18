@@ -27,8 +27,8 @@ export default function PresentSetup({ presents, onAdd, onRemove }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">🎁 Presents</h2>
+    <div className="bg-white rounded-lg shadow-lg p-6 border-4 border-red-700">
+      <h2 className="text-2xl font-bold mb-4 text-green-700">🎁 Presents</h2>
       
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="flex flex-col sm:flex-row gap-4">
@@ -37,12 +37,12 @@ export default function PresentSetup({ presents, onAdd, onRemove }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter present name"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="flex-1 px-4 py-2 border-2 border-red-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
           />
           
           <button
             type="submit"
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
+            className="px-6 py-2 bg-amber-800 text-white rounded-lg hover:bg-amber-900 transition-colors font-semibold"
           >
             Add Present
           </button>
@@ -56,7 +56,7 @@ export default function PresentSetup({ presents, onAdd, onRemove }: Props) {
           presents.map(present => (
             <div
               key={present.id}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors border-2 border-red-200"
             >
               <div className="flex items-center gap-3">
                 <span className="text-2xl">🎁</span>
