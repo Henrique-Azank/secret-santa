@@ -21,4 +21,5 @@ export interface GameState {
   currentTurnIndex: number;
   phase: GamePhase;
   lastAction: string;
+  lastSteal: { thief: string; victim: string; presentId: string } | null; // Track last steal to prevent immediate steal-back
 }

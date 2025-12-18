@@ -23,10 +23,15 @@ export default function GamePlay({ gameState, setGameState }: Props) {
   const availablePresents = gameState.presents.filter(p => p.currentOwner === null);
   
   // Get stealable presents (those owned by others and stolen < 2 times)
+  // Also prevent immediate steal-back: if player A just stole from player B, player B cannot steal it back immediately
   const stealablePresents = gameState.presents.filter(
     p => p.currentOwner !== null && 
          p.currentOwner !== currentPlayerId && 
-         p.stolenCount < 2
+         p.stolenCount < 2 &&
+         // Prevent immediate steal-back
+         !(gameState.lastSteal && 
+           gameState.lastSteal.presentId === p.id && 
+           gameState.lastSteal.victim === currentPlayerId)
   );
 
   const handlePickFromPile = (presentId: string) => {
@@ -50,6 +55,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
         presents: updatedPresents,
         currentTurnIndex: prev.currentTurnIndex + 1,
         lastAction: `${currentPlayer.icon} ${currentPlayer.name} picked "${present.name}" from the pile!`,
+        lastSteal: null, // Clear last steal when picking from pile
       };
     });
   };
@@ -84,6 +90,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
         turnOrder: newTurnOrder,
         currentTurnIndex: prev.currentTurnIndex + 1,
         lastAction: `${currentPlayer.icon} ${currentPlayer.name} stole "${present.name}" from ${victim.icon} ${victim.name}!`,
+        lastSteal: { thief: currentPlayerId, victim: victimId!, presentId }, // Track this steal
       };
     });
   };

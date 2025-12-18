@@ -15,6 +15,7 @@ export default function Home() {
     currentTurnIndex: 0,
     phase: 'setup',
     lastAction: '',
+    lastSteal: null,
   });
 
   const addParticipant = (participant: Participant) => {
@@ -58,6 +59,7 @@ export default function Home() {
       currentTurnIndex: 0,
       phase: 'playing',
       lastAction: 'Game started! ' + prev.participants.find(p => p.id === shuffled[0])?.name + ' goes first!',
+      lastSteal: null,
     }));
   };
 
@@ -127,6 +129,7 @@ export default function Home() {
               currentTurnIndex: 0,
               phase: 'setup',
               lastAction: '',
+              lastSteal: null,
             })}
           />
         )}
