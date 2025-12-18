@@ -24,4 +24,5 @@ export interface GameState {
   phase: GamePhase;
   lastAction: string;
   lastSteal: { thief: string; victim: string; presentId: string } | null; // Track last steal to prevent immediate steal-back
+  challengeMode: { active: boolean; challenger: string; defender: string; presentId: string } | null;
 }

@@ -19,6 +19,7 @@ export default function Home() {
     phase: 'setup',
     lastAction: '',
     lastSteal: null,
+    challengeMode: null,
   });
 
   useEffect(() => {
@@ -95,6 +96,7 @@ export default function Home() {
       phase: 'playing',
       lastAction: 'Game started! ' + prev.participants.find(p => p.id === shuffled[0])?.name + ' goes first!',
       lastSteal: null,
+      challengeMode: null,
     }));
   };
 
@@ -103,14 +105,20 @@ export default function Home() {
                         gameState.phase === 'setup';
 
   return (
-    <main className="min-h-screen p-8 relative">
-      {/* Background Christmas Music - YouTube */}
+    <main className={`min-h-screen p-8 relative transition-colors duration-500 ${
+      gameState.challengeMode?.active ? 'bg-black' : ''
+    }`} style={gameState.challengeMode?.active ? {background: '#000'} : {}}>
+      {/* Background Music - Christmas or Battle */}
       {isMusicPlaying && (
         <iframe
+          key={gameState.challengeMode?.active ? 'battle' : 'christmas'}
           width="0"
           height="0"
-          src="https://www.youtube.com/embed/mng4p8yWFjs?autoplay=1&loop=1&playlist=mng4p8yWFjs&controls=0&showinfo=0&modestbranding=1"
-          title="Christmas Background Music"
+          src={gameState.challengeMode?.active             
+            ? "https://www.youtube.com/embed/EAwWPadFsOA?autoplay=1&loop=1&playlist=EAwWPadFsOA&controls=0&showinfo=0&modestbranding=1"
+            : "https://www.youtube.com/embed/mng4p8yWFjs?autoplay=1&loop=1&playlist=mng4p8yWFjs&controls=0&showinfo=0&modestbranding=1"
+          }
+          title={gameState.challengeMode?.active ? "Battle Music" : "Christmas Background Music"}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           className="hidden"
@@ -244,6 +252,7 @@ export default function Home() {
               phase: 'setup',
               lastAction: '',
               lastSteal: null,
+              challengeMode: null,
             })}
           />
         )}
