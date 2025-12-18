@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { GameState, Present } from '@/types/game';
+import ParticipantIcon from './ParticipantIcon';
 
 interface Props {
   gameState: GameState;
@@ -124,9 +125,11 @@ export default function GamePlay({ gameState, setGameState }: Props) {
     <div className="space-y-6">
       {/* Current Turn Info */}
       <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg shadow-xl p-6 text-center">
-        <h2 className="text-3xl font-bold text-white mb-2">
-          Current Turn: {currentPlayer?.icon} {currentPlayer?.name}
-        </h2>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <h2 className="text-3xl font-bold text-white">Current Turn:</h2>
+          {currentPlayer && <ParticipantIcon participant={currentPlayer} size="lg" />}
+          <h2 className="text-3xl font-bold text-white">{currentPlayer?.name}</h2>
+        </div>
         <p className="text-white text-lg">
           Turn {gameState.currentTurnIndex + 1} of {gameState.turnOrder.length}
         </p>
@@ -187,11 +190,15 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                     className="w-full text-left p-4 bg-red-50 border-2 border-red-300 rounded-lg hover:bg-red-100 hover:border-red-500 transition-all"
                   >
                     <div className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1">
                         <span className="font-semibold text-gray-800">{present.name}</span>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Owner: {owner?.icon} {owner?.name}
-                        </p>
+                        {owner && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-sm text-gray-600">Owner:</span>
+                            <ParticipantIcon participant={owner} size="sm" />
+                            <span className="text-sm text-gray-600">{owner.name}</span>
+                          </div>
+                        )}
                       </div>
                       <span className="text-xs bg-orange-200 px-2 py-1 rounded">
                         Stolen: {present.stolenCount}/2
@@ -222,7 +229,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">{participant.icon}</span>
+                  <ParticipantIcon participant={participant} size="md" />
                   <span className="font-semibold">{participant.name}</span>
                 </div>
                 {presents.length > 0 ? (
@@ -299,7 +306,7 @@ export default function GamePlay({ gameState, setGameState }: Props) {
             return (
               <div
                 key={`${participantId}-${index}`}
-                className={`px-3 py-2 rounded-lg text-sm font-semibold ${
+                className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 ${
                   isCurrent
                     ? 'bg-yellow-400 text-white'
                     : isPast
@@ -307,7 +314,8 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                     : 'bg-blue-100 text-blue-800'
                 }`}
               >
-                {participant?.icon} {participant?.name}
+                {participant && <ParticipantIcon participant={participant} size="sm" />}
+                <span>{participant?.name}</span>
               </div>
             );
           })}

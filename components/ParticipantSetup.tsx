@@ -14,16 +14,33 @@ interface Props {
 export default function ParticipantSetup({ participants, onAdd, onRemove }: Props) {
   const [name, setName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState(AVAILABLE_ICONS[0]);
+  const [iconType, setIconType] = useState<'emoji' | 'photo'>('emoji');
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoSource, setPhotoSource] = useState<'upload' | 'url'>('upload');
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
+    if (name.trim() && (iconType === 'emoji' || photoUrl)) {
       onAdd({
         id: Date.now().toString(),
         name: name.trim(),
         icon: selectedIcon,
+        iconType,
+        photoUrl: iconType === 'photo' ? photoUrl : undefined,
       });
       setName('');
+      setPhotoUrl('');
     }
   };
 
@@ -32,33 +49,137 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
       <h2 className="text-2xl font-bold mb-4 text-gray-800">👥 Participants</h2>
       
       <form onSubmit={handleSubmit} className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="space-y-4">
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter participant name"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           
-          <div className="flex gap-2 items-center">
+          {/* Icon Type Selector */}
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                value="emoji"
+                checked={iconType === 'emoji'}
+                onChange={(e) => setIconType(e.target.value as 'emoji' | 'photo')}
+                className="w-4 h-4"
+              />
+              <span className="font-semibold text-gray-700">Emoji</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                value="photo"
+                checked={iconType === 'photo'}
+                onChange={(e) => setIconType(e.target.value as 'emoji' | 'photo')}
+                className="w-4 h-4"
+              />
+              <span className="font-semibold text-gray-700">Photo</span>
+            </label>
+          </div>
+
+          {/* Emoji Selector */}
+          {iconType === 'emoji' && (
             <select
               value={selectedIcon}
               onChange={(e) => setSelectedIcon(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-2xl"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-2xl"
             >
               {AVAILABLE_ICONS.map(icon => (
                 <option key={icon} value={icon}>{icon}</option>
               ))}
             </select>
-            
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-            >
-              Add
-            </button>
-          </div>
+          )}
+
+          {/* Photo Upload or URL */}
+          {iconType === 'photo' && (
+            <div className="space-y-3">
+              {/* Photo Source Toggle */}
+              <div className="flex gap-4 border-b border-gray-200 pb-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoSource('upload');
+                    setPhotoUrl('');
+                  }}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    photoSource === 'upload'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  📁 Upload File
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoSource('url');
+                    setPhotoUrl('');
+                  }}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    photoSource === 'url'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  🔗 Photo URL
+                </button>
+              </div>
+
+              {/* File Upload */}
+              {photoSource === 'upload' && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              )}
+
+              {/* URL Input */}
+              {photoSource === 'url' && (
+                <input
+                  type="url"
+                  value={photoUrl}
+                  onChange={(e) => setPhotoUrl(e.target.value)}
+                  placeholder="https://example.com/photo.jpg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              )}
+
+              {/* Preview */}
+              {photoUrl && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Preview:</span>
+                  <img 
+                    src={photoUrl} 
+                    alt="Preview" 
+                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-300"
+                    onError={(e) => {
+                      e.currentTarget.src = '';
+                      e.currentTarget.className = 'hidden';
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={!name.trim() || (iconType === 'photo' && !photoUrl)}
+            className={`w-full px-6 py-2 rounded-lg transition-colors font-semibold ${
+              name.trim() && (iconType === 'emoji' || photoUrl)
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            Add Participant
+          </button>
         </div>
       </form>
 
@@ -72,7 +193,15 @@ export default function ParticipantSetup({ participants, onAdd, onRemove }: Prop
               className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <span className="text-3xl">{participant.icon}</span>
+                {participant.iconType === 'photo' && participant.photoUrl ? (
+                  <img 
+                    src={participant.photoUrl} 
+                    alt={participant.name}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-300"
+                  />
+                ) : (
+                  <span className="text-3xl">{participant.icon}</span>
+                )}
                 <span className="font-semibold text-gray-800">{participant.name}</span>
               </div>
               <button

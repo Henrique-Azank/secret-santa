@@ -2,6 +2,8 @@ export interface Participant {
   id: string;
   name: string;
   icon: string;
+  iconType: 'emoji' | 'photo';
+  photoUrl?: string;
 }
 
 export interface Present {

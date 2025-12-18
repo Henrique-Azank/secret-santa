@@ -1,6 +1,7 @@
 'use client';
 
 import { GameState } from '@/types/game';
+import ParticipantIcon from './ParticipantIcon';
 
 interface Props {
   gameState: GameState;
@@ -36,7 +37,7 @@ export default function GameResults({ gameState, onReset }: Props) {
               className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-2 border-purple-200"
             >
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-4xl">{participant.icon}</span>
+                <ParticipantIcon participant={participant} size="xl" />
                 <h4 className="text-2xl font-bold text-gray-800">{participant.name}</h4>
               </div>
               
