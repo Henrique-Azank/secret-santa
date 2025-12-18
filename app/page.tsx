@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Participant, Present, GameState } from '@/types/game';
 import ParticipantSetup from '@/components/ParticipantSetup';
 import PresentSetup from '@/components/PresentSetup';
@@ -9,6 +9,8 @@ import GameResults from '@/components/GameResults';
 
 export default function Home() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
+  const [santaDelays, setSantaDelays] = useState<number[]>([]);
+  const [christmasIcons, setChristmasIcons] = useState<string[]>([]);
   const [gameState, setGameState] = useState<GameState>({
     participants: [],
     presents: [],
@@ -18,6 +20,24 @@ export default function Home() {
     lastAction: '',
     lastSteal: null,
   });
+
+  useEffect(() => {
+    // Array of Christmas-themed emojis
+    const availableIcons = ['🎄', '⛄', '🎁', '🔔', '⭐', '🕯️', '🦌', '🎅', '🤶', '🧝', '🍬', '🍭', '🎀', '🧦', '❄️', '☃️'];
+    
+    // Randomly select 6 icons for the flying elements
+    const selectedIcons = Array.from({ length: 6 }, () => 
+      availableIcons[Math.floor(Math.random() * availableIcons.length)]
+    );
+    setChristmasIcons(selectedIcons);
+    
+    // Generate random delays for flying icons on mount
+    const delays = Array.from({ length: 6 }, (_, i) => {
+      const duration = [20, 22, 18, 28, 24, 26][i];
+      return Math.random() * duration;
+    });
+    setSantaDelays(delays);
+  }, []);
 
   const addParticipant = (participant: Participant) => {
     setGameState(prev => ({
@@ -91,6 +111,18 @@ export default function Home() {
       >
         {isMusicPlaying ? '🔊' : '🔇'}
       </button>
+      
+      {/* Christmas Icons Flying */}
+      {santaDelays.length > 0 && christmasIcons.length > 0 && (
+        <>
+          <div className="santa-sleigh" style={{ animationDelay: `-${santaDelays[0]}s` }}>{christmasIcons[0]}</div>
+          <div className="santa-sleigh-reverse" style={{ animationDelay: `-${santaDelays[1]}s` }}>{christmasIcons[1]}</div>
+          <div className="santa-sleigh-3" style={{ animationDelay: `-${santaDelays[2]}s` }}>{christmasIcons[2]}</div>
+          <div className="santa-sleigh-4" style={{ animationDelay: `-${santaDelays[3]}s` }}>{christmasIcons[3]}</div>
+          <div className="santa-sleigh-5" style={{ animationDelay: `-${santaDelays[4]}s` }}>{christmasIcons[4]}</div>
+          <div className="santa-sleigh-6" style={{ animationDelay: `-${santaDelays[5]}s` }}>{christmasIcons[5]}</div>
+        </>
+      )}
       
       {/* Snowflakes */}
       <div className="snowflake">❄</div>
