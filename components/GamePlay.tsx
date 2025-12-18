@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { GameState, Present } from '@/types/game';
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export default function GamePlay({ gameState, setGameState }: Props) {
+  const [editingPresentId, setEditingPresentId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
   const currentPlayerId = gameState.turnOrder[gameState.currentTurnIndex];
   const currentPlayer = gameState.participants.find(p => p.id === currentPlayerId);
   
@@ -97,6 +100,24 @@ export default function GamePlay({ gameState, setGameState }: Props) {
 
   const getParticipantPresents = (participantId: string) => {
     return gameState.presents.filter(p => p.currentOwner === participantId);
+  };
+
+  const handleRenamePresent = (presentId: string, newName: string) => {
+    if (!newName.trim()) return;
+    
+    setGameState(prev => ({
+      ...prev,
+      presents: prev.presents.map(p => 
+        p.id === presentId ? { ...p, name: newName.trim() } : p
+      ),
+    }));
+    setEditingPresentId(null);
+    setEditingName('');
+  };
+
+  const startEditing = (presentId: string, currentName: string) => {
+    setEditingPresentId(presentId);
+    setEditingName(currentName);
   };
 
   return (
@@ -205,11 +226,55 @@ export default function GamePlay({ gameState, setGameState }: Props) {
                   <span className="font-semibold">{participant.name}</span>
                 </div>
                 {presents.length > 0 ? (
-                  <div className="text-sm">
+                  <div className="text-sm space-y-2">
                     {presents.map(present => (
-                      <div key={present.id} className="text-gray-700 flex items-start gap-1">
+                      <div key={present.id} className="text-gray-700 flex items-center gap-1">
                         <span>🎁</span>
-                        <span>{present.name}</span>
+                        {editingPresentId === present.id ? (
+                          <div className="flex-1 flex gap-1">
+                            <input
+                              type="text"
+                              value={editingName}
+                              onChange={(e) => setEditingName(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleRenamePresent(present.id, editingName);
+                                } else if (e.key === 'Escape') {
+                                  setEditingPresentId(null);
+                                  setEditingName('');
+                                }
+                              }}
+                              className="flex-1 px-2 py-1 text-xs border border-blue-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              autoFocus
+                            />
+                            <button
+                              onClick={() => handleRenamePresent(present.id, editingName)}
+                              className="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600"
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingPresentId(null);
+                                setEditingName('');
+                              }}
+                              className="px-2 py-1 bg-gray-400 text-white rounded text-xs hover:bg-gray-500"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="flex-1">{present.name}</span>
+                            <button
+                              onClick={() => startEditing(present.id, present.name)}
+                              className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                              title="Rename present"
+                            >
+                              ✎
+                            </button>
+                          </>
+                        )}
                       </div>
                     ))}
                   </div>
