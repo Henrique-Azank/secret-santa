@@ -10,7 +10,7 @@ import GameResults from '@/components/GameResults';
 export default function Home() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
   const [santaDelays, setSantaDelays] = useState<number[]>([]);
-  const [christmasIcons, setChristmasIcons] = useState<string[]>([]);
+  const [christmasIcons, setChristmasIcons] = useState<Array<{type: 'emoji' | 'photo', value: string}>>([]);
   const [gameState, setGameState] = useState<GameState>({
     participants: [],
     presents: [],
@@ -26,9 +26,10 @@ export default function Home() {
     const availableIcons = ['🎄', '⛄', '🎁', '🔔', '⭐', '🕯️', '🦌', '🎅', '🤶', '🧝', '🍬', '🍭', '🎀', '🧦', '❄️', '☃️'];
     
     // Randomly select 6 icons for the flying elements
-    const selectedIcons = Array.from({ length: 6 }, () => 
-      availableIcons[Math.floor(Math.random() * availableIcons.length)]
-    );
+    const selectedIcons = Array.from({ length: 6 }, () => ({
+      type: 'emoji' as const,
+      value: availableIcons[Math.floor(Math.random() * availableIcons.length)]
+    }));
     setChristmasIcons(selectedIcons);
     
     // Generate random delays for flying icons on mount
@@ -44,6 +45,19 @@ export default function Home() {
       ...prev,
       participants: [...prev.participants, participant],
     }));
+    
+    // Add participant icon to flying animations
+    const newIcon = {
+      type: participant.iconType,
+      value: participant.iconType === 'photo' && participant.photoUrl ? participant.photoUrl : participant.icon
+    };
+    
+    setChristmasIcons(prev => [...prev, newIcon]);
+    
+    // Add a new random delay for the new icon
+    const durations = [20, 22, 18, 28, 24, 26];
+    const randomDuration = durations[Math.floor(Math.random() * durations.length)];
+    setSantaDelays(prev => [...prev, Math.random() * randomDuration]);
   };
 
   const removeParticipant = (id: string) => {
@@ -115,12 +129,35 @@ export default function Home() {
       {/* Christmas Icons Flying */}
       {santaDelays.length > 0 && christmasIcons.length > 0 && (
         <>
-          <div className="santa-sleigh" style={{ animationDelay: `-${santaDelays[0]}s` }}>{christmasIcons[0]}</div>
-          <div className="santa-sleigh-reverse" style={{ animationDelay: `-${santaDelays[1]}s` }}>{christmasIcons[1]}</div>
-          <div className="santa-sleigh-3" style={{ animationDelay: `-${santaDelays[2]}s` }}>{christmasIcons[2]}</div>
-          <div className="santa-sleigh-4" style={{ animationDelay: `-${santaDelays[3]}s` }}>{christmasIcons[3]}</div>
-          <div className="santa-sleigh-5" style={{ animationDelay: `-${santaDelays[4]}s` }}>{christmasIcons[4]}</div>
-          <div className="santa-sleigh-6" style={{ animationDelay: `-${santaDelays[5]}s` }}>{christmasIcons[5]}</div>
+          {christmasIcons.map((icon, index) => {
+            const classes = [
+              'santa-sleigh',
+              'santa-sleigh-reverse', 
+              'santa-sleigh-3',
+              'santa-sleigh-4',
+              'santa-sleigh-5',
+              'santa-sleigh-6'
+            ];
+            const className = classes[index % classes.length];
+            
+            return (
+              <div 
+                key={index} 
+                className={className} 
+                style={{ animationDelay: `-${santaDelays[index]}s` }}
+              >
+                {icon.type === 'photo' ? (
+                  <img 
+                    src={icon.value} 
+                    alt="Flying icon"
+                    className="inline-block w-12 h-12 rounded-full object-cover border-2 border-white"
+                  />
+                ) : (
+                  icon.value
+                )}
+              </div>
+            );
+          })}
         </>
       )}
       
